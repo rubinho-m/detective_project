@@ -1,0 +1,95 @@
+h1 {
+   text-align: center;
+}
+h2 {
+   text-align: center;
+}
+h3 {
+   text-align: center;
+   font-size: 32px;
+}
+ul {
+   margin-left: 500px;
+   font-size: 24px;
+}
+h4 {
+    padding-left: 20px;
+    color: #A3449E;
+}
+form.login-form {
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0 auto;
+    padding: 10px;
+    width: 450px;
+}
+.bigp{
+    font-size: 32px;
+    margin-left: 550px;
+}
+li {
+    list-style-type: none;
+}
+
+table {
+    border: 1px solid grey;
+    width: 70%;
+    margin: 0 auto;
+}
+th {
+    border: 1px solid grey;
+    width: 50%;
+    text-align: center;
+}
+td {
+    border: 1px solid grey;
+    width: 50%;
+    text-align: center;
+}
+#blue {
+    background-color: #4E89FF;
+}
+#pink {
+    background-color: #FF30DC;
+}
+form {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 450px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+}
+#im {
+    text-align: center;
+}
+.table-center {
+    margin: 0 auto;
+    width: 75%;
+}
+#rand {
+    font-size: 32px;
+    text-align: center;
+}
+#mid {
+    width: auto;
+    height: 300px;
+    padding-top: 30px;
+}
+#big-button {
+    width: 300px;
+    height: auto;
+}
+#btn-div {
+    text-align: center;
+}
+#green {
+    background-color: #53E1AD;
+}
+#blue {
+    background-color: #ABCBFF;
+}
+#yellow {
+    background-color: #F2E594;
+}
