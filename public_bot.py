@@ -3,8 +3,9 @@ from telegram.ext import Updater, MessageHandler, Filters
 from telegram.ext import CallbackContext, CommandHandler
 from requests import get, post, delete
 from load_image_from_yandex import load_image
+from config import TOKEN
 
-TOKEN = '1058008434:AAFrQo93WYtes4dzHiveCHi3VrWr2nStMjY'
+
 REQUEST_KWARGS = {
     'proxy_url': 'socks4://151.80.201.162:1080'
 }
