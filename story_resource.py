@@ -10,9 +10,12 @@ from story_parser import parser
 class Story(db_session.SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'stories'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+    title = sqlalchemy.Column(sqlalchemy.String)  # название истории
     text = sqlalchemy.Column(sqlalchemy.String)  # текст истории
     answer = sqlalchemy.Column(sqlalchemy.String)  # ответ на задачу
-    api = sqlalchemy.Column(sqlalchemy.String)  # вид APi
+    spectator = sqlalchemy.Column(sqlalchemy.String)  # опрос очевидцев
+    opinion = sqlalchemy.Column(sqlalchemy.String)  # мнение коллег
+    api = sqlalchemy.Column(sqlalchemy.String)  # вид API
     proof = sqlalchemy.Column(sqlalchemy.String)  # объект поиска API
     answer_choice = sqlalchemy.Column(sqlalchemy.String)  # строка, разделенная _
 
@@ -51,8 +54,11 @@ class StoryListResource(Resource):
         session = db_session.create_session()
         story = Story(
             id=args['id'],
+            title=args['title'],
             text=args['text'],
             answer=args['answer'],
+            spectator=args['spectator'],
+            opinion=args['opinion'],
             api=args['api'],
             proof=args['proof'],
             answer_choice=args['answer_choice']

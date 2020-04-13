@@ -12,8 +12,11 @@ text = ' '.join(['Охотник прицелился и выстрелил.',
 
 print(post('http://localhost:5000/api/stories',  # добавить историю
            json={'id': 1,
+                 'title': 'Осознание ошибки',
                  'text': text,
                  'answer': 'лавина в горах',
+                 'spectator': '',
+                 'opinion': '',
                  'api': 'image',
                  'proof': 'альпы',
                  'answer_choice': 'лавина в горах_медведь_война_неисправное ружье'}).json())
