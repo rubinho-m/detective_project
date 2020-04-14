@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<nav>{% if current_user.is_authenticated %}
+    <a class="navbar-brand" href="/logout">{{current_user.surname}} {{ current_user.name }}</a>
+{% else %}
+    <p>
+        <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+        <a class="btn btn-success" href="/login">Войти</a>
+    </p>
+{% endif %}
+{% if current_user.is_authenticated %}
+        <a href="jobs" class="btn btn-secondary">Добавить работу</a>
+    {% endif %}</nav>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{{css_style}}" />
+    <title>{{title}}</title>
+    </head>
+    <body>
+    <h1>fghj</h1>
+    <h4 class="text-primary">opa</h4>
+    <!-- Begin page content -->
+    <main role="main" class="container">
+        {% block content %}{% endblock %}
+    </main>
+    </body>
+    </html>
