@@ -9,7 +9,7 @@ from story_parser import parser
 
 class Story(db_session.SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'stories'
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     title = sqlalchemy.Column(sqlalchemy.String)  # название истории
     text = sqlalchemy.Column(sqlalchemy.String)  # текст истории
     answer = sqlalchemy.Column(sqlalchemy.String)  # ответ на задачу

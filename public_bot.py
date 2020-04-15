@@ -4,7 +4,8 @@ from telegram.ext import CallbackContext, CommandHandler
 from requests import get, post, delete
 from load_image_from_yandex import load_image
 from config import TOKEN
-
+import os
+import random
 
 api_url = 'http://localhost:5000'
 
@@ -68,6 +69,7 @@ def proof(update, context):
     if context.user_data['story_dict'][number]['proof']:
         update.message.reply_text('У вас кончились улики')
     else:
+        context.user_data['story_dict'][number]['proof'] = True
         story = get(f'{api_url}/api/stories/{number}').json()['stories']
         evidence = story['proof']
         api = story['api']
@@ -79,7 +81,66 @@ def proof(update, context):
                 update.message.chat_id,
                 open(map_file, 'rb'),
                 caption=message)
-        # update.message.reply_text('Сейчас принесем улику...')
+            os.remove(map_file)
+    remains = context.user_data['story_dict'][number]
+    reply = []
+    if not remains['proof']:
+        reply.append('У вас осталась 1 улика \n')
+    if not remains['spectator']:
+        reply.append('У вас осталось 1 мнение очевидцев \n')
+    if not remains['opinion']:
+        reply.append('У вас остался 1 диалог с коллегами \n')
+    if len(reply) == 0:
+        reply.append('У вас больше нет подсказок')
+    update.message.reply_text(''.join(reply))
+
+
+def spectator(update, context):
+    number = context.user_data['active_story']
+    if context.user_data['story_dict'][number]['spectator']:
+        update.message.reply_text('Вы опросили всех очевидцев')
+    else:
+        story = get(f'{api_url}/api/stories/{number}').json()['stories']
+        phrase = story['spectator']
+        begins = ['Вам сообщили, что ', 'Вы узнали, что ', 'Опрос показал, что ',
+                  'Очевидцы рассказали, что ']
+        context.user_data['story_dict'][number]['spectator'] = True
+        update.message.reply_text(f'{random.choice(begins)}{phrase}')
+    remains = context.user_data['story_dict'][number]
+    reply = []
+    if not remains['proof']:
+        reply.append('У вас осталась 1 улика \n')
+    if not remains['spectator']:
+        reply.append('У вас осталось 1 мнение очевидцев \n')
+    if not remains['opinion']:
+        reply.append('У вас остался 1 диалог с коллегами \n')
+    if len(reply) == 0:
+        reply.append('У вас больше нет подсказок')
+    update.message.reply_text(''.join(reply))
+
+
+def opinion(update, context):
+    number = context.user_data['active_story']
+    if context.user_data['story_dict'][number]['opinion']:
+        update.message.reply_text('Вы опросили всех коллег')
+    else:
+        story = get(f'{api_url}/api/stories/{number}').json()['stories']
+        phrase = story['opinion']
+        begins = ['Коллеги думают, что ', 'Вы узнали, что ', 'Ваши друзья думают, что ',
+                  'Профессионалы рассказали, что ']
+        context.user_data['story_dict'][number]['opinion'] = True
+        update.message.reply_text(f'{random.choice(begins)}{phrase}')
+    remains = context.user_data['story_dict'][number]
+    reply = []
+    if not remains['proof']:
+        reply.append('У вас осталась 1 улика \n')
+    if not remains['spectator']:
+        reply.append('У вас осталось 1 мнение очевидцев \n')
+    if not remains['opinion']:
+        reply.append('У вас остался 1 диалог с коллегами \n')
+    if len(reply) == 0:
+        reply.append('У вас больше нет подсказок')
+    update.message.reply_text(''.join(reply))
 
 
 def main():
@@ -98,6 +159,10 @@ def main():
 
     dp.add_handler(CommandHandler('proof',
                                   proof,
+                                  pass_user_data=True))
+
+    dp.add_handler(CommandHandler('spectator',
+                                  spectator,
                                   pass_user_data=True))
 
     updater.start_polling()
