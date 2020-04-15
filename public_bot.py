@@ -6,6 +6,8 @@ from load_image_from_yandex import load_image
 from config import TOKEN
 
 
+api_url = 'http://localhost:5000'
+
 REQUEST_KWARGS = {
     'proxy_url': 'socks4://151.80.201.162:1080'
 }
@@ -16,7 +18,7 @@ def start(update, context):
     context.user_data['active_story'] = 0
     context.user_data['story_dict'] = {}
 
-    stories = get('http://localhost:5000/api/stories').json()['stories']
+    stories = get(f'{api_url}/api/stories').json()['stories']
     reply_keyboard = []
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     message = ['Добро пожаловать в Яндекс Детектив!',
@@ -45,7 +47,7 @@ def story(update, context):
                       ['/spectator'],
                       ['/opinion']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
-    story = get(f'http://localhost:5000/api/stories/{number}').json()['stories']
+    story = get(f'{api_url}/api/stories/{number}').json()['stories']
     context.user_data['active_story'] = number
     context.user_data['in_progress'].append(number)
     context.user_data['story_dict'][number] = {'proof': False,
@@ -66,7 +68,7 @@ def proof(update, context):
     if context.user_data['story_dict'][number]['proof']:
         update.message.reply_text('У вас кончились улики')
     else:
-        story = get(f'http://localhost:5000/api/stories/{number}').json()['stories']
+        story = get(f'{api_url}/api/stories/{number}').json()['stories']
         evidence = story['proof']
         api = story['api']
         # !!!!!ВАРИАНТЫ РАЗЛИЧНЫХ API!!!!!
