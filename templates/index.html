@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if current_user.is_authenticated %}
+<h1 style="color: white">Детективы</h1>
+{% endif %}
+{% endblock %}
