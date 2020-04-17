@@ -10,7 +10,7 @@ import random
 api_url = 'http://localhost:5000'
 
 REQUEST_KWARGS = {
-    'proxy_url': 'socks4://151.80.201.162:1080'
+    'proxy_url': 'socks4://62.43.206.20:48714'
 }
 
 
@@ -18,25 +18,42 @@ def start(update, context):
     context.user_data['in_progress'] = []
     context.user_data['active_story'] = 0
     context.user_data['story_dict'] = {}
+    context.user_data['done_stories'] = []
+    context.user_data['failed_stories'] = []
+    context.user_data['answer'] = ''
 
     stories = get(f'{api_url}/api/stories').json()['stories']
 
-    reply_keyboard = []
+    reply_keyboard = [['/stories']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     message = ['Добро пожаловать в Яндекс Детектив!',
                'Здесь Вы сможете погрузиться в жизнь настоящего детектива,',
                'разгадывая загадки и раскрывая преступления.',
                'Вам неизменно будут помогать Ваши коллеги и помощники',
-               'Время начинать!']
-    message_text = ['Вам доступны истории:']
-    for x in stories:
-        reply_keyboard.append([f"/story {x['id']}"])
-        message_text.append(f"{x['id']} - {x['title']}")
+               'Время начинать!',
+               '/stories - чтобы получить список историй']
     context.bot.send_photo(
         update.message.chat_id,
         open('static/img/detective_desk.jpg', 'rb'),
-        caption='\n'.join(message)
+        caption='\n'.join(message),
+        reply_markup=markup
     )
+
+
+def stories(update, context):
+    stories = get(f'{api_url}/api/stories').json()['stories']
+    reply_keyboard = []
+    message_text = ['Вам доступны истории:']
+    for x in stories:
+        print(x['id'], context.user_data['done_stories'])
+        reply_keyboard.append([f"/story {x['id']}"])
+        if str(x['id']) in context.user_data['done_stories']:
+            message_text.append(f"{x['id']} - {x['title']} ✅")
+        elif str(x['id']) in context.user_data['failed_stories']:
+            message_text.append(f"{x['id']} - {x['title']} ❌")
+        else:
+            message_text.append(f"{x['id']} - {x['title']}")
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     update.message.reply_text(
         '\n'.join(message_text),
         reply_markup=markup
@@ -47,7 +64,8 @@ def story(update, context):
     number = context.args[0]
     reply_keyboard = [['/proof'],
                       ['/spectator'],
-                      ['/opinion']]
+                      ['/opinion'],
+                      ['/answer']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
     story = get(f'{api_url}/api/stories/{number}').json()['stories']
     context.user_data['active_story'] = number
@@ -57,7 +75,8 @@ def story(update, context):
                                                'opinion': False}
     help_message = ['/proof - посмотреть улики',
                     '/spectator - опросить очевидцев',
-                    '/opinion - спросить мнение коллег']
+                    '/opinion - спросить мнение коллег',
+                    '/answer - дать ответ на задачу']
     update.message.reply_text(story['text'])
     update.message.reply_text(
         '\n'.join(help_message),
@@ -145,12 +164,16 @@ def opinion(update, context):
 
 
 def answer(update, context):
+    context.user_data['end'] = False
+    context.user_data['correct'] = False
     number = context.user_data['active_story']
     story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
 
     reply_keyboard = [['/yes'],
                       ['no']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+
+    context.user_data['answer'] = story[0]
 
     begins = ['Как вы думаете, ', 'По вашему мнению, ', 'Вы считаете, что ', 'Вы думаете, что ']
     update.message.reply_text(
@@ -161,20 +184,170 @@ def answer(update, context):
 
 
 def first_response(update, context):
-    print(1)
-    update.message.reply_text('Следующий вопрос...')
+    number = context.user_data['active_story']
+    if context.user_data['end']:
+        reply_keyboard = [[f'/story {number}'],
+                          ['/stories']]
+        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+        message = ['Вы можете пройти эту историю заново',
+                   'либо перейти к списку историй']
+        update.message.reply_text(
+            '\n'.join(message),
+            reply_markup=markup
+        )
+        return ConversationHandler.END
+    if context.user_data['correct']:
+        reply_keyboard = [['/stories']]
+        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+        update.message.reply_text(
+            '/stories - к списку историй',
+            reply_markup=markup
+        )
+        return ConversationHandler.END
+    story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    context.user_data['answer'] = story[1]
+    reply_keyboard = [['/yes'],
+                      ['no']]
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+
+    begins = ['Как вы думаете, ', 'По вашему мнению, ', 'Вы считаете, что ', 'Вы думаете, что ']
+    update.message.reply_text(
+        f'{random.choice(begins)}{story[1]}?',
+        reply_markup=markup
+    )
+    return 2
 
 
 def second_response(update, context):
-    pass
+    number = context.user_data['active_story']
+    if context.user_data['end']:
+        reply_keyboard = [[f'/story {number}'],
+                          ['/stories']]
+        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+        message = ['Вы можете пройти эту историю заново',
+                   'либо перейти к списку историй']
+        update.message.reply_text(
+            '\n'.join(message),
+            reply_markup=markup
+        )
+        return ConversationHandler.END
+    if context.user_data['correct']:
+        reply_keyboard = [['/stories']]
+        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+        update.message.reply_text(
+            '/stories - к списку историй',
+            reply_markup=markup
+        )
+        return ConversationHandler.END
+    story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    context.user_data['answer'] = story[2]
+    reply_keyboard = [['/yes'],
+                      ['no']]
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+
+    begins = ['Как вы думаете, ', 'По вашему мнению, ', 'Вы считаете, что ', 'Вы думаете, что ']
+    update.message.reply_text(
+        f'{random.choice(begins)}{story[2]}?',
+        reply_markup=markup
+    )
+    return 3
 
 
 def third_response(update, context):
-    pass
+    number = context.user_data['active_story']
+    if context.user_data['end']:
+        reply_keyboard = [[f'/story {number}'],
+                          ['/stories']]
+        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+        message = ['Вы можете пройти эту историю заново',
+                   'либо перейти к списку историй']
+        update.message.reply_text(
+            '\n'.join(message),
+            reply_markup=markup
+        )
+        return ConversationHandler.END
+    if context.user_data['correct']:
+        reply_keyboard = [['/stories']]
+        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+        update.message.reply_text(
+            '/stories - к списку историй',
+            reply_markup=markup
+        )
+        return ConversationHandler.END
+    story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    context.user_data['answer'] = story[3]
+    reply_keyboard = [['/yes'],
+                      ['no']]
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+
+    begins = ['Как вы думаете, ', 'По вашему мнению, ', 'Вы считаете, что ', 'Вы думаете, что ']
+    update.message.reply_text(
+        f'{random.choice(begins)}{story[3]}?',
+        reply_markup=markup
+    )
+    return 4
+
+
+def fourth_response(update, context):
+    number = context.user_data['active_story']
+    if context.user_data['end']:
+        reply_keyboard = [[f'/story {number}'],
+                          ['/stories']]
+        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+        message = ['Вы можете пройти эту историю заново',
+                   'либо перейти к списку историй']
+        update.message.reply_text(
+            '\n'.join(message),
+            reply_markup=markup
+        )
+        return ConversationHandler.END
+    if context.user_data['correct']:
+        reply_keyboard = [['/stories']]
+        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+        update.message.reply_text(
+            '/stories - к списку историй',
+            reply_markup=markup
+        )
+        return ConversationHandler.END
+    story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    context.user_data['answer'] = story[4]
+    reply_keyboard = [['/yes']]
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+    begins = ['Как вы думаете, ', 'По вашему мнению, ', 'Вы считаете, что ', 'Вы думаете, что ']
+    update.message.reply_text(
+        f'{random.choice(begins)}{story[4]}?',
+        reply_markup=markup
+    )
+    update.message.reply_text(
+        'Это последний вопрос, других версий у Вас нет',
+        reply_markup=markup
+    )
 
 
 def agree(update, context):
-    return ConversationHandler.END
+    number = context.user_data['active_story']
+    right_answer = get(f'{api_url}/api/stories/{number}').json()['stories']['answer']
+    if right_answer == context.user_data['answer']:
+        reply_keyboard = [['/exit']]
+        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+        update.message.reply_text('Правильно!')
+        update.message.reply_text('/exit - закончить историю',
+                                  reply_markup=markup)
+        context.user_data['correct'] = True
+        context.user_data['done_stories'].append(number)
+        return ConversationHandler.END
+    else:
+        reply_keyboard = [['/repeat']]
+        markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+        message = ['Увы, нет ☹️',
+                   '/repeat - попытаться заново']
+        update.message.reply_text(
+            '\n'.join(message),
+            reply_markup=markup
+        )
+        context.user_data['end'] = True
+        context.user_data['failed_stories'].append(number)
+        return ConversationHandler.END
 
 
 def main():
@@ -184,6 +357,10 @@ def main():
 
     dp.add_handler(CommandHandler('start',
                                   start,
+                                  pass_user_data=True))
+
+    dp.add_handler(CommandHandler('stories',
+                                  stories,
                                   pass_user_data=True))
 
     dp.add_handler(CommandHandler('story',
@@ -204,7 +381,9 @@ def main():
 
         states={
             1: [MessageHandler(Filters.text, first_response)],
-            2: [MessageHandler(Filters.text, second_response)]
+            2: [MessageHandler(Filters.text, second_response)],
+            3: [MessageHandler(Filters.text, third_response)],
+            4: [MessageHandler(Filters.text, fourth_response)]
         },
 
         fallbacks=[CommandHandler('yes', agree)]
