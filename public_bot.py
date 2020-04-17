@@ -1,6 +1,6 @@
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import Updater, MessageHandler, Filters
-from telegram.ext import CallbackContext, CommandHandler
+from telegram.ext import CallbackContext, CommandHandler, ConversationHandler
 from requests import get, post, delete
 from load_image_from_yandex import load_image
 from config import TOKEN
@@ -20,6 +20,7 @@ def start(update, context):
     context.user_data['story_dict'] = {}
 
     stories = get(f'{api_url}/api/stories').json()['stories']
+
     reply_keyboard = []
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     message = ['Добро пожаловать в Яндекс Детектив!',
@@ -143,6 +144,39 @@ def opinion(update, context):
     update.message.reply_text(''.join(reply))
 
 
+def answer(update, context):
+    number = context.user_data['active_story']
+    story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+
+    reply_keyboard = [['/yes'],
+                      ['no']]
+    markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+
+    begins = ['Как вы думаете, ', 'По вашему мнению, ', 'Вы считаете, что ', 'Вы думаете, что ']
+    update.message.reply_text(
+        f'{random.choice(begins)}{story[0]}?',
+        reply_markup=markup
+    )
+    return 1
+
+
+def first_response(update, context):
+    print(1)
+    update.message.reply_text('Следующий вопрос...')
+
+
+def second_response(update, context):
+    pass
+
+
+def third_response(update, context):
+    pass
+
+
+def agree(update, context):
+    return ConversationHandler.END
+
+
 def main():
     updater = Updater(TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
 
@@ -164,6 +198,20 @@ def main():
     dp.add_handler(CommandHandler('spectator',
                                   spectator,
                                   pass_user_data=True))
+
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('answer', answer, pass_user_data=True)],
+
+        states={
+            1: [MessageHandler(Filters.text, first_response)],
+            2: [MessageHandler(Filters.text, second_response)]
+        },
+
+        fallbacks=[CommandHandler('yes', agree)]
+    )
+
+    dp.add_handler(CommandHandler('yes', agree))
+    dp.add_handler(conv_handler)
 
     updater.start_polling()
 
