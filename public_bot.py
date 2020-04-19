@@ -96,7 +96,10 @@ def proof(update, context):
         # !!!!!ВАРИАНТЫ РАЗЛИЧНЫХ API!!!!!
         if api == 'image':
             map_file = load_image(evidence, update.message.chat_id)
-            message = 'Вам стала доступна фотография с места преступления'
+            if story['api_message']:
+                message = story['api_message']
+            else:
+                message = 'Вам стала доступна фотография с места преступления'
             context.bot.send_photo(
                 update.message.chat_id,
                 open(map_file, 'rb'),
@@ -374,6 +377,10 @@ def main():
 
     dp.add_handler(CommandHandler('spectator',
                                   spectator,
+                                  pass_user_data=True))
+
+    dp.add_handler(CommandHandler('opinion',
+                                  opinion,
                                   pass_user_data=True))
 
     conv_handler = ConversationHandler(

@@ -11,14 +11,15 @@ text = ' '.join(['Охотник прицелился и выстрелил.',
                  'Через пару минут он был мертв.'])
 
 print(post('http://localhost:5000/api/stories',  # добавить историю
-           json={'id': 1,
-                 'title': 'Осознание ошибки',
+           json={'id': None,
+                 'title': 'Тест',
                  'text': text,
                  'answer': 'лавина в горах',
                  'spectator': '',
                  'opinion': '',
                  'api': 'image',
                  'proof': 'альпы',
+                 'api_message': None,
                  'answer_choice': 'лавина в горах_медведь_война_неисправное ружье'}).json())
 
 print(get('http://localhost:5000/api/stories/5').json())  # несуществующая история

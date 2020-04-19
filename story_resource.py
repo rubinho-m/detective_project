@@ -17,6 +17,7 @@ class Story(db_session.SqlAlchemyBase, UserMixin, SerializerMixin):
     opinion = sqlalchemy.Column(sqlalchemy.String)  # мнение коллег
     api = sqlalchemy.Column(sqlalchemy.String)  # вид API
     proof = sqlalchemy.Column(sqlalchemy.String)  # объект поиска API
+    api_message = sqlalchemy.Column(sqlalchemy.String)  # сообщение к выбранному API(необязательно)
     answer_choice = sqlalchemy.Column(sqlalchemy.String)  # строка, разделенная _
 
 
@@ -61,6 +62,7 @@ class StoryListResource(Resource):
             opinion=args['opinion'],
             api=args['api'],
             proof=args['proof'],
+            api_message=args['api_message'],
             answer_choice=args['answer_choice']
         )
         session.add(story)
