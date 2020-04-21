@@ -1,5 +1,24 @@
 <!doctype html>
 <html lang="en">
+<style>
+   h1 {
+    color: white
+   }
+   p {
+    color: white;
+    font-size: 20px;
+   }
+   th {
+    color: white
+
+   }
+   td {
+    color: white
+   }
+   caption {
+    color: white
+   }
+</style>
 <nav>{% if current_user.is_authenticated %}
     <a class="navbar-brand" href="/logout">{{current_user.nickname}}</a>
 {% else %}
@@ -9,7 +28,7 @@
     </p>
 {% endif %}
 {% if current_user.is_authenticated %}
-        <a href="/" class="btn btn-secondary">Посмотреть дело</a>
+        <a href="/" class="btn btn-secondary">Посмотреть дела</a>
     {% endif %}</nav>
 <head>
     <meta charset="utf-8">

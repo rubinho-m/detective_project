@@ -55,8 +55,16 @@ def load_user(user_id):
 @app.route("/")
 @app.route('/index')
 def start():
-    return render_template('index.html', css_style=url_for('static', filename='css/style.css'),
-                           background=url_for('static', filename='img/img_start.jpg'))
+    session = db_session.create_session()
+    user = session.query(User).get(user_ses.get('current_user'))
+    if user and user.watched is not None:
+        stories = [int(x) for x in str(user.watched).split()]
+    else:
+        stories = None
+
+    return render_template('index.html', background=url_for('static', filename='img/img_start.jpg'),
+                           stories=session.query(Story).all(),
+                           user_stories=stories)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -97,6 +105,21 @@ def register():
                                form=form)
     return render_template('register.html', title='Регистрация', form=form,
                            background=url_for('static', filename='img/img_start.jpg'))
+
+
+@app.route('/story_telling/<int:id>')
+def tell(id):
+    session = db_session.create_session()
+    story = session.query(Story).get(id)
+
+    user = session.query(User).get(user_ses.get('current_user'))
+    user.add_story(str(story.id))
+
+    session.commit()
+
+    return render_template('story.html',
+                           background=url_for('static', filename='img/img_start.jpg'),
+                           story=story)
 
 
 @app.route('/logout')

@@ -2,6 +2,16 @@
 
 {% block content %}
 {% if current_user.is_authenticated %}
-<h1 style="color: white">Детективы</h1>
+<link rel="stylesheet" type="text/css" href="static/css/example.css"/>
+<h1>Детективы</h1>
+{% for story in stories %}
+<p>{{ story.id }}. {{ story.title }}
+{% if user_stories and story.id in user_stories %}✅{% else %}❌{% endif %}</p>
+<nav>
+    <div>
+        <a href="/story_telling/{{ story.id }}" class="btn alert-primary">Расследовать</a>
+    </div>
+</nav>
+{% endfor %}
 {% endif %}
 {% endblock %}

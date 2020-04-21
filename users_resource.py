@@ -24,6 +24,13 @@ class User(db_session.SqlAlchemyBase, UserMixin, SerializerMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+    def add_story(self, story):
+        if self.watched is not None:
+            if story not in str(self.watched):
+                self.watched = str(self.watched) + ' ' + story
+        else:
+            self.watched = ' '.join([story])
+
 
 def abort_if_user_not_found(user_id):
     session = db_session.create_session()
