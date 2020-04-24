@@ -10,7 +10,7 @@ import random
 api_url = 'http://localhost:5000'
 
 REQUEST_KWARGS = {
-    'proxy_url': 'socks4://173.217.255.36:58401'
+    'proxy_url': 'socks4://83.228.74.251:36531'
 }
 
 

@@ -1,17 +1,18 @@
 from flask import Flask, render_template, url_for, redirect
 from flask_restful import abort, Api
 from flask import session as user_ses
-
-from users_resource import User, UserResource, UserListResource
-from story_resource import Story, StoryResource, StoryListResource
 from flask_login import LoginManager, login_required, logout_user, login_user
-
 from flask_wtf import FlaskForm
 from wtforms.fields.simple import PasswordField, BooleanField, SubmitField
 from wtforms.fields.core import StringField
 from wtforms.validators import DataRequired
 
+from requests import get, post, delete
+
 from data import db_session
+from users_resource import User, UserResource, UserListResource
+from story_resource import Story, StoryResource, StoryListResource
+from load_image_from_yandex import load_image
 
 
 class RegisterForm(FlaskForm):
@@ -119,7 +120,8 @@ def tell(id):
 
     return render_template('story.html',
                            background=url_for('static', filename='img/img_start.jpg'),
-                           story=story)
+                           story=story, picture=f'/{load_image(story.proof, story.proof)}')
+    # return f'''<img src="/{load_image(story.proof, story.proof)}" alt="здесь должна была быть картинка, но не нашлась">'''
 
 
 @app.route('/logout')
