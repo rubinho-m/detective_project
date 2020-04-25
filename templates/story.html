@@ -14,8 +14,26 @@
     <p align="centre">{{story.text}}</p>
 </div>
 <div>
-    {{picture}}
-    <img src={{ picture }}>
+    <a class="btn alert-primary">Фото с места событий</a>
+    <p><img src={{ ''.join(picture.split()) }}></p>
+
+    <a class="btn alert-primary">Показания</a>
+    <p>{{story.spectator.capitalize()}}</p>
+
+    <a class="btn alert-primary">Улики</a>
+    <p>{{story.opinion.capitalize()}}</p>
 </div>
+<a class="btn alert-warning">Ответ</a>
+<p>
+{% for ans in story.answer_choice.split('_') %}
+    {{ans.capitalize()}}
+    {% if ans == story.answer %}
+    <a class="btn alert-warning" href="/right_ans/{{ story.id }}"><font color="black">Да</font></a>
+    {% else %}
+    <a class="btn alert-warning" href="/wrong_ans"><font color="black">Да</font></a>
+    {% endif %}
+    <a class="btn alert-warning"><font color="black">Нет</font></a>
+{% endfor %}
+</p>
 
 {% endblock %}

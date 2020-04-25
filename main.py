@@ -64,7 +64,7 @@ def start():
         stories = None
 
     return render_template('index.html', background=url_for('static', filename='img/img_start.jpg'),
-                           stories=session.query(Story).all(),
+                           stories=session.query(Story).all(), picture='/static/img/detective_man.jpg',
                            user_stories=stories)
 
 
@@ -109,7 +109,19 @@ def register():
 
 
 @app.route('/story_telling/<int:id>')
+@login_required
 def tell(id):
+    session = db_session.create_session()
+    story = session.query(Story).get(id)
+
+    return render_template('story.html',
+                           background=url_for('static', filename='img/img_start.jpg'),
+                           story=story, picture=f'/{load_image(story.proof, "".join(story.proof.split()))}')
+
+
+@app.route('/right_ans/<int:id>')
+@login_required
+def right_answer(id):
     session = db_session.create_session()
     story = session.query(Story).get(id)
 
@@ -117,12 +129,15 @@ def tell(id):
     user.add_story(str(story.id))
 
     session.commit()
+    return render_template('win.html', background=url_for('static', filename='img/img_start.jpg'),
+                           picture='/static/img/aploud.jpg')
 
-    return render_template('story.html',
-                           background=url_for('static', filename='img/img_start.jpg'),
-                           story=story, picture=f'/{load_image(story.proof, story.proof)}')
-    # return f'''<img src="/{load_image(story.proof, story.proof)}" alt="здесь должна была быть картинка, но не нашлась">'''
 
+@app.route('/wrong_ans')
+@login_required
+def wrong_answer():
+    return render_template('false.html', background=url_for('static', filename='img/img_start.jpg'),
+                           picture='/static/img/wrong.jpg')
 
 @app.route('/logout')
 @login_required
