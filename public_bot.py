@@ -1,3 +1,5 @@
+from get_img import get_img
+from get_wiki_answer import get_description
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import Updater, MessageHandler, Filters
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler
@@ -10,7 +12,7 @@ import random
 api_url = 'http://localhost:5000'
 
 REQUEST_KWARGS = {
-    'proxy_url': 'socks4://83.228.74.251:36531'
+    'proxy_url': 'socks4://185.90.166.78:40504'
 }
 
 
@@ -45,7 +47,6 @@ def stories(update, context):
     reply_keyboard = []
     message_text = ['Вам доступны истории:']
     for x in stories:
-        print(x['id'], context.user_data['done_stories'])
         reply_keyboard.append([f"/story {x['id']}"])
         if str(x['id']) in context.user_data['done_stories']:
             message_text.append(f"{x['id']} - {x['title']} ✅")
@@ -65,7 +66,8 @@ def story(update, context):
     reply_keyboard = [['/proof'],
                       ['/spectator'],
                       ['/opinion'],
-                      ['/answer']]
+                      ['/answer'],
+                      ['/search']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
     story = get(f'{api_url}/api/stories/{number}').json()['stories']
     context.user_data['active_story'] = number
@@ -76,7 +78,8 @@ def story(update, context):
     help_message = ['/proof - посмотреть улики',
                     '/spectator - опросить очевидцев',
                     '/opinion - спросить мнение коллег',
-                    '/answer - дать ответ на задачу']
+                    '/answer - дать ответ на задачу',
+                    '/search <слово или выражение> - воспользоваться телефоном']
     update.message.reply_text(story['text'])
     update.message.reply_text(
         '\n'.join(help_message),
@@ -105,6 +108,18 @@ def proof(update, context):
                 open(map_file, 'rb'),
                 caption=message)
             os.remove(map_file)
+        elif api == 'map':
+            evidence = str(evidence).split('_')
+            for x in evidence:
+                map_file = get_img(x)
+                context.bot.send_photo(
+                    update.message.chat_id,
+                    open(map_file, 'rb'))
+                os.remove(map_file)
+            if story['api_message']:
+                message = story['api_message']
+                update.message.reply_text(message)
+
     remains = context.user_data['story_dict'][number]
     reply = []
     if not remains['proof']:
@@ -353,6 +368,12 @@ def agree(update, context):
         return ConversationHandler.END
 
 
+def search(update, context):
+    obj = ' '.join(context.args)
+    description = get_description(obj)
+    update.message.reply_text(description)
+
+
 def main():
     updater = Updater(TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
 
@@ -393,10 +414,12 @@ def main():
             4: [MessageHandler(Filters.text, fourth_response)]
         },
 
-        fallbacks=[CommandHandler('yes', agree)]
+        fallbacks=[CommandHandler('yes', agree),
+                   CommandHandler('search', search, pass_args=True)]
     )
 
     dp.add_handler(CommandHandler('yes', agree))
+    dp.add_handler(CommandHandler('search', search, pass_args=True))
     dp.add_handler(conv_handler)
 
     updater.start_polling()

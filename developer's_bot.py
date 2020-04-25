@@ -114,6 +114,7 @@ def dev(update, context):
             message = temp[7]
             if message == 'None':
                 message = None
+            print(temp)
             post(f'{api_url}/api/stories',
                  json={'id': None,
                        'title': temp[0],
