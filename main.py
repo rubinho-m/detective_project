@@ -9,10 +9,13 @@ from wtforms.validators import DataRequired
 
 from requests import get, post, delete
 
+from get_img import get_img
+
 from data import db_session
 from users_resource import User, UserResource, UserListResource
 from story_resource import Story, StoryResource, StoryListResource
 from load_image_from_yandex import load_image
+from delete_loaded_img import delete_in_directory as del_imgs
 
 
 class RegisterForm(FlaskForm):
@@ -112,13 +115,27 @@ def register():
 @app.route('/story_telling/<int:id>')
 @login_required
 def tell(id):
+    path = 'static/loaded'
+    del_imgs(path)
+
     session = db_session.create_session()
     story = session.query(Story).get(id)
+    # story = get(f'http://localhost:5000/api/stories/{id}').json()['stories']
+
+    picture_list = []
+
+    pictures = story.proof.split('_')
+    if story.api == 'image':
+        for pict in pictures:
+            picture_list.append(f'/{load_image(pict, "".join(pict))}')
+    elif story.api == 'map':
+        for map in pictures:
+            picture_list.append(f'/{get_img(map)}')
 
     return render_template('story.html',
                            background=url_for('static', filename='img/mbg.jpg'),
                            story=story,
-                           picture=f'/{load_image(story.proof, "".join(story.proof.split()))}')
+                           picture_list=picture_list)
 
 
 @app.route('/right_ans/<int:id>')

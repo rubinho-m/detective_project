@@ -16,7 +16,7 @@ def load_image(img_to_search, user):
             break
 
     p = requests.get(img)
-    map_file = f'static/img/{user}.jpg'
+    map_file = f'static/loaded/{user}.jpg'
     out = open(map_file, "wb")
     out.write(p.content)
     out.close()

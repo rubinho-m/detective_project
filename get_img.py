@@ -25,7 +25,7 @@ def get_img(name):
 
     response = requests.get(map_request)
 
-    map_file = f"static/img/map{random.randint(0, 2 ** 64)}.png"
+    map_file = f"static/loaded/map{random.randint(0, 2 ** 64)}.png"
     with open(map_file, "wb") as file:
         file.write(response.content)
     return map_file

@@ -13,8 +13,9 @@
 </div>
 <div>
     <a class="btn alert-primary">Фото с места событий</a>
-    <p><img src={{ ''.join(picture.split()) }}></p>
-
+{% for picture in picture_list %}
+    <p><img src={{ ''.join(picture) }}></p>
+{% endfor %}
     <a class="btn alert-primary">Показания</a>
     <p>{{story.spectator.capitalize()}}</p>
 
