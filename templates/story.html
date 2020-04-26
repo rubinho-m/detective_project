@@ -1,17 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-	h1{ text-align: center; }
-	div.paragraph {
-		margin: 5% 20%;
-        text-align: center;
-      }
-
-</style>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Neucha&display=swap" rel="stylesheet">
+    <title>Title</title>
+</head>
 <h1>{{story.title}}</h1>
-<div class="paragraph">
-    <p align="centre">{{story.text}}</p>
+<div>
+    <p align="center">{{story.text}}</p>
 </div>
 <div>
     <a class="btn alert-primary">Фото с места событий</a>
@@ -25,7 +23,7 @@
 </div>
 <a class="btn alert-warning">Ответ</a>
 <p>
-{% for ans in story.answer_choice.split('_') %}
+    {% for ans in story.answer_choice.split('_') %}
     {{ans.capitalize()}}
     {% if ans == story.answer %}
     <a class="btn alert-warning" href="/right_ans/{{ story.id }}"><font color="black">Да</font></a>
@@ -33,7 +31,7 @@
     <a class="btn alert-warning" href="/wrong_ans"><font color="black">Да</font></a>
     {% endif %}
     <a class="btn alert-warning"><font color="black">Нет</font></a>
-{% endfor %}
+    {% endfor %}
 </p>
 
 {% endblock %}

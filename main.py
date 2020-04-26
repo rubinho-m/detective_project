@@ -63,8 +63,9 @@ def start():
     else:
         stories = None
 
-    return render_template('index.html', background=url_for('static', filename='img/img_start.jpg'),
-                           stories=session.query(Story).all(), picture='/static/img/detective_man.jpg',
+    return render_template('index.html',
+                           background=url_for('static', filename='img/bg.jpg'),
+                           stories=session.query(Story).all(),
                            user_stories=stories)
 
 
@@ -84,7 +85,7 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form,
-                           background=url_for('static', filename='img/img_start.jpg'))
+                           background=url_for('static', filename='img/bg.jpg'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -105,7 +106,7 @@ def register():
                                message="Пароли не совпадают",
                                form=form)
     return render_template('register.html', title='Регистрация', form=form,
-                           background=url_for('static', filename='img/img_start.jpg'))
+                           background=url_for('static', filename='img/mbg.jpg'))
 
 
 @app.route('/story_telling/<int:id>')
@@ -115,8 +116,9 @@ def tell(id):
     story = session.query(Story).get(id)
 
     return render_template('story.html',
-                           background=url_for('static', filename='img/img_start.jpg'),
-                           story=story, picture=f'/{load_image(story.proof, "".join(story.proof.split()))}')
+                           background=url_for('static', filename='img/mbg.jpg'),
+                           story=story,
+                           picture=f'/{load_image(story.proof, "".join(story.proof.split()))}')
 
 
 @app.route('/right_ans/<int:id>')
@@ -129,15 +131,16 @@ def right_answer(id):
     user.add_story(str(story.id))
 
     session.commit()
-    return render_template('win.html', background=url_for('static', filename='img/img_start.jpg'),
+    return render_template('win.html', background=url_for('static', filename='img/bg.jpg'),
                            picture='/static/img/aploud.jpg')
 
 
 @app.route('/wrong_ans')
 @login_required
 def wrong_answer():
-    return render_template('false.html', background=url_for('static', filename='img/img_start.jpg'),
+    return render_template('false.html', background=url_for('static', filename='img/bg.jpg'),
                            picture='/static/img/wrong.jpg')
+
 
 @app.route('/logout')
 @login_required

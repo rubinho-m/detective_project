@@ -1,14 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-    .image_css {
-		margin: 2% 20%;
-        text-align: center;
-      }
-</style>
+
 {% if current_user.is_authenticated %}
-<link rel="stylesheet" type="text/css" href="static/css/example.css"/>
 <h1>Детективы</h1>
 {% for story in stories %}
 <p>{{ story.id }}. {{ story.title }}
@@ -20,9 +14,9 @@
 </nav>
 {% endfor %}
 {% else %}
-    <h1 align="center" class="text-primary">Яндекс Детектив</h1>
-    <h4 align="center" class="text-primary">Вы готовы примерить на себя роль Шерлока Холмса?</h4>
-    <h4 align="center" class="text-primary">Да? Тогда добро пожаловать!</h4>
-    <p class="image_css"><img src={{ picture }}></p>
+    <h1 align="center" class="white-text">Яндекс Детектив</h1>
+    <h4 align="center" class="white-text">Вы готовы примерить на себя роль Шерлока Холмса?</h4>
+    <h4 align="center" class="white-text">Да? Тогда добро пожаловать!</h4>
+
 {% endif %}
 {% endblock %}
