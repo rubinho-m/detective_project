@@ -105,7 +105,7 @@ def dev(update, context):
     file_name = str(f.get_file().file_path).split('/')[-1]
     print(file_name)
     f.get_file().download()
-    file = open(file_name)
+    file = open(file_name, encoding='utf-8')
     temp = []
     for line in file:
         line = line.replace('\n', '')
