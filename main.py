@@ -127,7 +127,7 @@ def tell(id):
     pictures = story.proof.split('_')
     if story.api == 'image':
         for pict in pictures:
-            picture_list.append(f'/{load_image(pict, "".join(pict))}')
+            picture_list.append(f'/{load_image(pict, "".join(pict.split()))}')
     elif story.api == 'map':
         for map in pictures:
             picture_list.append(f'/{get_img(map)}')
