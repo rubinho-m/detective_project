@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" type="text/css" href="static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Neucha&display=swap" rel="stylesheet">
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -11,7 +11,7 @@
           crossorigin="anonymous">
     <title>{{title}}</title>
 </head>
-<body style="background-image:url({{background}}); background-size: contain; background-repeat: repeat-x;">
+<body style="background-image:url({{background}}); background-size: cover; background-color: #A2A39E; background-repeat: repeat-x;">
 {% if current_user.is_authenticated %}
 <nav>
     <a class="navbar-brand white" href="/logout">{{current_user.nickname}}</a>

@@ -9,6 +9,18 @@
 </head>
 <div class="center-text">
 <h1>Да... В этот раз Вас постигла неудача.</h1>
-<h2>Но как хорошо, что у нас есть дела в запасе!</h2>
+<h2>Но как хорошо, что имеются еще дела в запасе!</h2>
+</div>
+<br>
+<div class="anim anim--close nume">
+  <svg width="500" height="500" viewBox="0 0 48 48" fill="none"
+       stroke="red" stroke-width="3" stroke-dasharray="100">
+    <path id="fail" d="M 15,15 L 32,33 M 32,15 L 15,33"
+          stroke-dashoffset="0">
+      <animate attributeName="stroke-dashoffset"
+               from="100" to="0" repeatCount="1" dur="5.5s">
+      </animate>
+    </path>
+  </svg>
 </div>
 {% endblock %}

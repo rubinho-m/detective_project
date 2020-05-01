@@ -7,32 +7,71 @@
     <link href="https://fonts.googleapis.com/css2?family=Neucha&display=swap" rel="stylesheet">
     <title>Title</title>
 </head>
+<body>
 <h1>{{story.title}}</h1>
 <div>
     <p align="center">{{story.text}}</p>
 </div>
-<div>
-    <a class="btn alert-primary">Фото с места событий</a>
-{% for picture in picture_list %}
-    <p><img src={{ picture }}></p>
-{% endfor %}
-    <a class="btn alert-primary">Показания</a>
-    <p>{{story.spectator.capitalize()}}</p>
-
-    <a class="btn alert-primary">Улики</a>
-    <p>{{story.opinion.capitalize()}}</p>
+<div class="photo">
+    <a class="butt">Изображение с места событий</a>
+    <br>
+    {% for picture in picture_list %}
+    <div class="image">
+        <img src={{ picture }} class="photo-btn">
+        <br>
+    </div>
+    {% endfor %}
 </div>
-<a class="btn alert-warning">Ответ</a>
+<div class="spectator">
+    <a class="butt">Показания</a>
+    <br>
+    <div class="text">
+        <p class="spectator-btn">{{story.spectator.capitalize()}}</p>
+    </div>
+</div>
+<div class="opinion">
+    <a class="butt">Мнение коллег</a>
+    <br>
+    <div class="text">
+        <p class="opinion-btn">{{story.opinion.capitalize()}}</p>
+    </div>
+</div>
+<a class="butt">Ответ</a>
 <p>
     {% for ans in story.answer_choice.split('_') %}
     {{ans.capitalize()}}
     {% if ans == story.answer %}
-    <a class="btn alert-warning" href="/right_ans/{{ story.id }}"><font color="black">Да</font></a>
+    <a class="yes" href="/right_ans/{{ story.id }}"><font color="black">Да</font></a>
     {% else %}
-    <a class="btn alert-warning" href="/wrong_ans"><font color="black">Да</font></a>
+    <a class="yes" href="/wrong_ans"><font color="black">Да</font></a>
     {% endif %}
-    <a class="btn alert-warning"><font color="black">Нет</font></a>
+    <a class="no"><font color="black">Нет</font></a>
     {% endfor %}
 </p>
+<script>
+console.log('TEST')
+let photo_btn = document.querySelector('.photo a')
+let photo = document.querySelectorAll('.photo-btn')
+let spectator_btn = document.querySelector('.spectator a')
+let spectator = document.querySelector('.spectator-btn')
+let opinion = document.querySelector('.opinion-btn')
+let opinion_btn = document.querySelector('.opinion a')
 
+console.log(photo)
+
+photo_btn.addEventListener("click", function(){
+for (i=0; i<=photo.length; i++) {
+    photo[i].classList.add("photo-btn-active")
+}
+})
+spectator_btn.addEventListener("click", function(){
+    spectator.classList.add("spectator-btn-active")
+})
+
+opinion_btn.addEventListener("click", function(){
+    opinion.classList.add("opinion-btn-active")
+})
+
+</script>
+</body>
 {% endblock %}

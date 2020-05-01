@@ -148,13 +148,13 @@ def right_answer(id):
     user.add_story(str(story.id))
 
     session.commit()
-    return render_template('win.html', background=url_for('static', filename='img/bg.jpg'))
+    return render_template('win.html', background=url_for('static', filename='img/mbg.jpg'))
 
 
 @app.route('/wrong_ans')
 @login_required
 def wrong_answer():
-    return render_template('false.html', background=url_for('static', filename='img/bg.jpg'))
+    return render_template('false.html', background=url_for('static', filename='img/mbg.jpg'))
 
 
 @app.route('/logout')
