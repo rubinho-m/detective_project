@@ -15,6 +15,9 @@
 <div class="photo">
     <a class="butt">Изображение с места событий</a>
     <br>
+    {% if story.api_message %}
+    <p>{{story.api_message}}</p>
+    {% endif %}
     {% for picture in picture_list %}
     <div class="image">
         <img src={{ picture }} class="photo-btn">
