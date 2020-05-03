@@ -88,7 +88,7 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form,
-                           background=url_for('static', filename='img/bg.jpg'))
+                           background=url_for('static', filename='img/mbg.jpg'))
 
 
 @app.route('/register', methods=['GET', 'POST'])

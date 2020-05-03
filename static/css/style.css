@@ -197,12 +197,12 @@ html, body {
 
 .anim--check {
   top: 25%;
-  background: #A2A39E;
+  background: #FCDD76;
 }
 
 .anim--close {
   top: 20%;
-  background: #A2A39E;
+  background: #FCDD76;
 }
 .photo-btn {
   opacity: 0;
@@ -319,4 +319,58 @@ text-decoration: none;
 .butt:hover:before,button:hover:after{
   width:100%;
   transition:800ms ease all;
+}
+
+.first {
+	width: 300px;
+	height: 300px;
+	position: relative;
+	opacity: 0;
+	font-size: 32px;
+	z-index: 5;
+}
+
+.second {
+	width: 300px;
+	font-size: 32px;
+	height: 300px;
+	position: relative;
+	bottom: 300px;
+	opacity: 0;
+	z-index: 4;
+}
+
+.third {
+	width: 300px;
+	font-size: 32px;
+	height: 300px;
+	bottom: 600px;
+	position: relative;
+	opacity: 0;
+	z-index: 3;
+}
+.fourth {
+	width: 300px;
+	height: 300px;
+	font-size: 32px;
+	bottom: 900px;
+	position: relative;
+	opacity: 0;
+	z-index: 2;
+}
+.fifth {
+	width: 300px;
+	height: 300px;
+	bottom: 1200px;
+	position: relative;
+	font-size: 32px;
+	opacity: 0;
+	z-index: 1;
+}
+a.continue {
+    cursor: pointer;
+}
+
+.big {
+  font-size: 32px;
 }

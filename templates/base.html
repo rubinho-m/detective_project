@@ -9,9 +9,10 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <title>{{title}}</title>
+    <link rel="shortcut icon" href="static/img/favicon.ico">
+    <title>Яндекс.Детектив</title>
 </head>
-<body style="background-image:url({{background}}); background-size: cover; background-color: #A2A39E; background-repeat: repeat-x;">
+<body style="background-image:url({{background}}); background-size: cover; background-color: #A2A39E; background-repeat: repeat-y;">
 {% if current_user.is_authenticated %}
 <nav>
     <a class="navbar-brand white" href="/logout">{{current_user.nickname}}</a>

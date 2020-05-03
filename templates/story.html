@@ -5,18 +5,19 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../static/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Neucha&display=swap" rel="stylesheet">
-    <title>Title</title>
+    <link rel="shortcut icon" href="static/img/favicon.ico">
+    <title>Яндекс.Детектив</title>
 </head>
 <body>
-<h1>{{story.title}}</h1>
+<h1 class="big">{{story.title}}</h1>
 <div>
-    <p align="center">{{story.text}}</p>
+    <p align="center" class="big">{{story.text}}</p>
 </div>
 <div class="photo">
     <a class="butt">Изображение с места событий</a>
     <br>
     {% if story.api_message %}
-    <p>{{story.api_message}}</p>
+    <p class="big">{{story.api_message}}</p>
     {% endif %}
     {% for picture in picture_list %}
     <div class="image">
@@ -39,28 +40,39 @@
         <p class="opinion-btn">{{story.opinion.capitalize()}}</p>
     </div>
 </div>
-<a class="butt">Ответ</a>
-<p>
+<a class="butt answer">Ответ</a>
+<p class="big"> {% set data = ['first', 'second', 'third', 'fourth', 'fifth'] %}
     {% for ans in story.answer_choice.split('_') %}
+<div class="{{ data[loop.index - 1] }}">
     {{ans.capitalize()}}
     {% if ans == story.answer %}
     <a class="yes" href="/right_ans/{{ story.id }}"><font color="black">Да</font></a>
     {% else %}
     <a class="yes" href="/wrong_ans"><font color="black">Да</font></a>
     {% endif %}
-    <a class="no"><font color="black">Нет</font></a>
-    {% endfor %}
+    {% if loop.index != 5 %}
+    <a class="no continue"><font color="black">Нет</font></a>
+    {% endif %}
+</div>
+{% endfor %}
 </p>
 <script>
-console.log('TEST')
 let photo_btn = document.querySelector('.photo a')
 let photo = document.querySelectorAll('.photo-btn')
 let spectator_btn = document.querySelector('.spectator a')
 let spectator = document.querySelector('.spectator-btn')
 let opinion = document.querySelector('.opinion-btn')
 let opinion_btn = document.querySelector('.opinion a')
+let answer = document.querySelector('.answer')
+let first = document.querySelector('.first')
+let second = document.querySelector('.second')
+let third = document.querySelector('.third')
+let fourth = document.querySelector('.fourth')
+let fifth = document.querySelector('.fifth')
+let next = document.querySelectorAll('.continue')
+let k = 1
 
-console.log(photo)
+console.log(next)
 
 photo_btn.addEventListener("click", function(){
 for (i=0; i<=photo.length; i++) {
@@ -75,6 +87,58 @@ opinion_btn.addEventListener("click", function(){
     opinion.classList.add("opinion-btn-active")
 })
 
+function hideAll(){
+    first.style.opacity = 0
+    second.style.opacity = 0
+    third.style.opacity = 0
+    fourth.style.opacity = 0
+    fifth.style.opacity = 0
+    first.style.zIndex = 1
+    second.style.zIndex = 1
+    third.style.zIndex = 1
+    fourth.style.zIndex = 1
+    fifth.style.zIndex = 1
+}
+
+answer.addEventListener("click", function(){
+    if (k == 1) {
+        hideAll()
+        first.style.opacity = 1
+        first.style.zIndex = 2
+    }
+})
+next[0].addEventListener("click", function(){
+    k++
+    if (k == 2) {
+        hideAll()
+        second.style.opacity = 1
+        second.style.zIndex = 2
+    }
+})
+next[1].addEventListener("click", function(){
+    k++
+    if (k == 3) {
+        hideAll()
+        third.style.opacity = 1
+        third.style.zIndex = 2
+    }
+})
+next[2].addEventListener("click", function(){
+    k++
+    if (k == 4) {
+        hideAll()
+        fourth.style.opacity = 1
+        fourth.style.zIndex = 2
+    }
+})
+next[3].addEventListener("click", function(){
+    k++
+    if (k == 5) {
+        hideAll()
+        fifth.style.opacity = 1
+        fifth.style.zIndex = 2
+    }
+})
 </script>
 </body>
 {% endblock %}
