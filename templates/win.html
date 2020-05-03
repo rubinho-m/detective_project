@@ -8,7 +8,17 @@
     <title>Title</title>
 </head>
 <div class="center-text">
-<h1>Поздравляем! Вы настоящий Шерлок!</h1>
-<h2>Справились с задачей безукоризненно! Продолжайте в том же духе!</h2>
+    <h1>Поздравляем! Вы настоящий Шерлок!</h1>
+    <h2>Справились с задачей безукоризненно! Продолжайте в том же духе!</h2>
+</div>
+<div class="anim anim--check nume">
+    <svg width="500" height="500" viewBox="0 0 48 48" fill="none"
+         stroke="green" stroke-width="3" stroke-dasharray="100">
+        <path id="check" d="M 12,22 L 22,31 L 36,13"
+              stroke-dashoffset="0">
+            <animate attributeName="stroke-dashoffset"
+                     from="100" to="0" repeatCount="1" dur="4.5s"></animate>
+        </path>
+    </svg>
 </div>
 {% endblock %}
