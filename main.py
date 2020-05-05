@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, url_for, redirect
 from flask_restful import abort, Api
 from flask import session as user_ses
@@ -46,7 +48,10 @@ def main():
     api.add_resource(UserResource, '/api/users/<int:user_id>')
     api.add_resource(StoryListResource, '/api/stories')
     api.add_resource(StoryResource, '/api/stories/<int:story_id>')
-    app.run()
+    if "PORT" in os.environ:
+        app.run(host='0.0.0.0', port=os.environ["PORT"])
+    else:
+        app.run(host='127.0.0.1', port=5000)
 
 
 @login_manager.user_loader

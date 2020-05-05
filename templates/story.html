@@ -11,13 +11,13 @@
 <body>
 <h1 class="big">{{story.title}}</h1>
 <div>
-    <p align="center" class="big">{{story.text}}</p>
+    <p align="justify" class="big">{{story.text}}</p>
 </div>
 <div class="photo">
     <a class="butt">Изображение с места событий</a>
     <br>
     {% if story.api_message %}
-    <p class="big">{{story.api_message}}</p>
+    <p class="big">{{story.api_message.capitalize()}}</p>
     {% endif %}
     {% for picture in picture_list %}
     <div class="image">
