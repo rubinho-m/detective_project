@@ -49,6 +49,17 @@ def main():
     api.add_resource(StoryListResource, '/api/stories')
     api.add_resource(StoryResource, '/api/stories/<int:story_id>')
     if "PORT" in os.environ:
+        post('http://https://detective-test.herokuapp.com/api/stories',  # добавить историю
+             json={'id': 1,
+                   'title': 'Тест',
+                   'text': 'text',
+                   'answer': 'лавина в горах',
+                   'spectator': 'lalal',
+                   'opinion': 'iodosd',
+                   'api': 'image',
+                   'proof': 'альпы',
+                   'api_message': None,
+                   'answer_choice': 'лавина в горах_медведь_война_неисправное ружье'}).json()
         app.run(host='0.0.0.0', port=os.environ["PORT"])
     else:
         app.run(host='127.0.0.1', port=5000)
