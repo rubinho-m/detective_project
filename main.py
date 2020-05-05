@@ -43,7 +43,7 @@ login_manager.init_app(app)
 
 
 def main():
-    db_session.global_init("db/detective.db")
+    db_session.global_init()
     api.add_resource(UserListResource, '/api/users')
     api.add_resource(UserResource, '/api/users/<int:user_id>')
     api.add_resource(StoryListResource, '/api/stories')
