@@ -42,6 +42,15 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
+def download_all():  # download all images from yandex for heroku. do it just once
+    session = db_session.create_session()
+    stories = session.query(Story).all()
+    for story in stories:
+        story = story.to_dict()
+        if story['api'] == 'image':
+            load_image(story['proof'], story['id'])
+
+
 def main():
     db_session.global_init()
     api.add_resource(UserListResource, '/api/users')
@@ -51,6 +60,7 @@ def main():
     if "PORT" in os.environ:
         app.run(host='0.0.0.0', port=os.environ["PORT"])
     else:
+        # download_all()
         # session = db_session.create_session()
         # stories = session.query(Story).all()
         # session.close()
@@ -141,7 +151,7 @@ def register():
 @login_required
 def tell(id):
     path = 'static/loaded'
-    del_imgs(path)
+    # del_imgs(path)
 
     session = db_session.create_session()
     story = session.query(Story).get(id)
@@ -152,7 +162,7 @@ def tell(id):
     pictures = story.proof.split('_')
     if story.api == 'image':
         for pict in pictures:
-            picture_list.append(f'/{load_image(pict, "".join(pict.split()))}')
+            picture_list.append(f'/static/loaded/{id}.jpg')
     elif story.api == 'map':
         for map in pictures:
             picture_list.append(f'/{get_img(map)}')
