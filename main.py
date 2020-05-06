@@ -147,6 +147,16 @@ def register():
                            background=url_for('static', filename='img/mbg.jpg'))
 
 
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
+
+
 @app.route('/story_telling/<int:id>')
 @login_required
 def tell(id):
