@@ -51,6 +51,26 @@ def main():
     if "PORT" in os.environ:
         app.run(host='0.0.0.0', port=os.environ["PORT"])
     else:
+        # session = db_session.create_session()
+        # stories = session.query(Story).all()
+        # session.close()
+        # for story in stories:
+        #     story = story.to_dict()
+        #     session = db_session.create_session()
+        #     new = Story(
+        #         id=None,
+        #         title=story['title'],
+        #         text=story['text'],
+        #         answer=story['answer'],
+        #         spectator=story['spectator'],
+        #         opinion=story['opinion'],
+        #         api=story['api'],
+        #         proof=story['proof'],
+        #         api_message=story['api_message'],
+        #         answer_choice=story['answer_choice']
+        #     )
+        #     session.add(new)
+        #     session.commit()
         app.run(host='127.0.0.1', port=5000)
 
 
