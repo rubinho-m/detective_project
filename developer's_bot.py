@@ -14,8 +14,7 @@ REQUEST_KWARGS = {
 
 
 def start(update, context):
-    reply_keyboard = [['/usual'],
-                      ['/dev']]
+    reply_keyboard = [['/usual']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     update.message.reply_text('Выберите режим',
                               reply_markup=markup)
@@ -142,9 +141,6 @@ def main():
 
     dp.add_handler(CommandHandler('start',
                                   start,
-                                  pass_user_data=True))
-    dp.add_handler(CommandHandler('dev',
-                                  dev,
                                   pass_user_data=True))
 
     dp.add_handler(MessageHandler(Filters.document, dev, pass_user_data=True))
