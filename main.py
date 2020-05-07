@@ -187,6 +187,7 @@ def tell(id):
         new = capitalize_first(answ)
         temp.append(new)
     story.answer_choice = '_'.join(temp)
+    story.answer = capitalize_first(story.answer)
     return render_template('story.html',
                            background=url_for('static', filename='img/mbg.jpg'),
                            story=story,
