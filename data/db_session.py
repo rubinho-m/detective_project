@@ -36,10 +36,10 @@ def global_init():
 
 def create_session() -> Session:
     global __factory
-    # global k
+    global k
     # k += 1
     # if k != 1:
-    #     bd = 'postgres://eitmbruyscybfa:c93a936bdd50955a4a3d8a2b8d51a388d7922233a319a6fe23b001222afbe3d6@ec2-54-88-130-244.compute-1.amazonaws.com:5432/d1770t6u5ngl83'
+    #     bd = 'postgres://hltznebfnqgzrn:5789bca7a95dc1df252d4bb9fbc643230e5d37d6fd202a972a93f812bb4240e3@ec2-52-44-55-63.compute-1.amazonaws.com:5432/d1qfd3iejflmpl'
     #     engine = sa.create_engine(bd, echo=False)
     #     __factory = orm.sessionmaker(bind=engine)
     return __factory()
