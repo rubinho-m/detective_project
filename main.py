@@ -51,6 +51,12 @@ def download_all():  # download all images from yandex for heroku. do it just on
             load_image(story['proof'], story['id'])
 
 
+def capitalize_first(string):
+    if string:
+        return string[0].upper() + string[1:]
+    return string[:]
+
+
 def main():
     db_session.global_init()
     api.add_resource(UserListResource, '/api/users')
@@ -161,7 +167,7 @@ def internal_error(error):
 @login_required
 def tell(id):
     path = 'static/loaded'
-    # del_imgs(path)
+    del_imgs(path)
 
     session = db_session.create_session()
     story = session.query(Story).get(id)
@@ -176,7 +182,11 @@ def tell(id):
     elif story.api == 'map':
         for map in pictures:
             picture_list.append(f'/{get_img(map)}')
-
+    temp = []
+    for answ in story.answer_choice.split('_'):
+        new = capitalize_first(answ)
+        temp.append(new)
+    story.answer_choice = '_'.join(temp)
     return render_template('story.html',
                            background=url_for('static', filename='img/mbg.jpg'),
                            story=story,
