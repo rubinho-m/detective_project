@@ -9,7 +9,13 @@ from config import TOKEN
 import os
 import random
 
-api_url = 'http://localhost:5000'
+if "TOKEN" in os.environ:
+    TOKEN = os.environ['TOKEN']
+else:
+    from config import TOKEN
+
+# api_url = 'http://localhost:5000'
+api_url = 'https://detective-test.herokuapp.com/'
 
 REQUEST_KWARGS = {
     'proxy_url': 'socks4://198.50.177.44:44699'
@@ -98,7 +104,8 @@ def proof(update, context):
         api = story['api']
         # !!!!!ВАРИАНТЫ РАЗЛИЧНЫХ API!!!!!
         if api == 'image':
-            map_file = load_image(evidence, update.message.chat_id)
+            map_file = f'/static/loaded/{story["id"]}.jpg'
+            # map_file = load_image(evidence, update.message.chat_id)
             if story['api_message']:
                 message = story['api_message']
             else:
@@ -375,7 +382,8 @@ def search(update, context):
 
 
 def main():
-    updater = Updater(TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
+    updater = Updater(TOKEN, use_context=True,
+                      request_kwargs=REQUEST_KWARGS)  # , request_kwargs=REQUEST_KWARGS
 
     dp = updater.dispatcher
 

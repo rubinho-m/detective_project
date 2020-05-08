@@ -44,7 +44,7 @@
 <p class="big"> {% set data = ['first', 'second', 'third', 'fourth', 'fifth'] %}
     {% for ans in story.answer_choice.split('_') %}
 <div class="{{ data[loop.index - 1] }}">
-    {{ans.capitalize()}}
+    {{ans}}
     {% if ans == story.answer %}
     <a class="yes" href="/right_ans/{{ story.id }}"><font color="black">Да</font></a>
     {% else %}

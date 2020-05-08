@@ -6,6 +6,8 @@ def delete_in_directory(folder):
         file_path = os.path.join(folder, the_file)
         try:
             if os.path.isfile(file_path):
-                os.unlink(file_path)
+                if 'map' in file_path:
+                    print(file_path)
+                    os.unlink(file_path)
         except Exception as e:
             print(e)
