@@ -7,3 +7,4 @@ sqlalchemy
 sqlalchemy_serializer
 bs4
 psycopg2
+python-telegram-bot

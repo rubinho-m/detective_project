@@ -5,14 +5,19 @@ from telegram.ext import Updater, MessageHandler, Filters
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler
 from requests import get, post, delete
 from load_image_from_yandex import load_image
-from config import TOKEN
 import os
 import random
 
-api_url = 'http://localhost:5000'
+if "TOKEN" in os.environ:
+    TOKEN = os.environ['TOKEN']
+else:
+    from config import TOKEN
+
+# api_url = 'http://localhost:5000'
+api_url = 'https://detective-test.herokuapp.com/'
 
 REQUEST_KWARGS = {
-    'proxy_url': 'socks4://167.114.167.143:45204'
+    'proxy_url': 'socks4://91.233.250.106:4145'
 }
 
 
@@ -375,7 +380,7 @@ def search(update, context):
 
 
 def main():
-    updater = Updater(TOKEN, use_context=True, request_kwargs=REQUEST_KWARGS)
+    updater = Updater(TOKEN, use_context=True)  # , request_kwargs=REQUEST_KWARGS
 
     dp = updater.dispatcher
 
