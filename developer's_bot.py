@@ -9,7 +9,7 @@ from send_email import send_email
 api_url = 'http://localhost:5000'
 
 REQUEST_KWARGS = {
-    'proxy_url': 'socks4://167.114.167.143:45204'
+    'proxy_url': 'socks4://198.50.177.44:44699'
 }
 
 
