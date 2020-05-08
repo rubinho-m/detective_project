@@ -17,7 +17,7 @@ else:
 api_url = 'https://detective-test.herokuapp.com/'
 
 REQUEST_KWARGS = {
-    'proxy_url': 'socks4://91.233.250.106:4145'
+    'proxy_url': 'socks4://5.56.133.56:42659'
 }
 
 
@@ -103,7 +103,8 @@ def proof(update, context):
         api = story['api']
         # !!!!!ВАРИАНТЫ РАЗЛИЧНЫХ API!!!!!
         if api == 'image':
-            map_file = load_image(evidence, update.message.chat_id)
+            map_file = f'/static/loaded/{story["id"]}.jpg'
+            # map_file = load_image(evidence, update.message.chat_id)
             if story['api_message']:
                 message = story['api_message']
             else:
@@ -380,7 +381,8 @@ def search(update, context):
 
 
 def main():
-    updater = Updater(TOKEN, use_context=True)  # , request_kwargs=REQUEST_KWARGS
+    updater = Updater(TOKEN, use_context=True,
+                      request_kwargs=REQUEST_KWARGS)  # , request_kwargs=REQUEST_KWARGS
 
     dp = updater.dispatcher
 
