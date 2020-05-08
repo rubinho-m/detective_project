@@ -4,7 +4,6 @@ from telegram import ReplyKeyboardMarkup
 from telegram.ext import Updater, MessageHandler, Filters
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler
 from requests import get, post, delete
-from load_image_from_yandex import load_image
 import os
 import random
 
@@ -13,8 +12,8 @@ if "TOKEN" in os.environ:
 else:
     from config import TOKEN
 
-# api_url = 'http://localhost:5000'
-api_url = 'https://detective-test.herokuapp.com/'
+api_url = 'http://localhost:5000'
+# api_url = 'https://detective-test.herokuapp.com/'
 
 REQUEST_KWARGS = {
     'proxy_url': 'socks4://5.56.133.56:42659'
@@ -103,7 +102,8 @@ def proof(update, context):
         api = story['api']
         # !!!!!ВАРИАНТЫ РАЗЛИЧНЫХ API!!!!!
         if api == 'image':
-            map_file = f'/static/loaded/{story["id"]}.jpg'
+            map_file = f'static/loaded/{number}.jpg'
+            print(map_file)
             # map_file = load_image(evidence, update.message.chat_id)
             if story['api_message']:
                 message = story['api_message']
@@ -113,7 +113,6 @@ def proof(update, context):
                 update.message.chat_id,
                 open(map_file, 'rb'),
                 caption=message)
-            os.remove(map_file)
         elif api == 'map':
             evidence = str(evidence).split('_')
             for x in evidence:
@@ -381,8 +380,11 @@ def search(update, context):
 
 
 def main():
-    updater = Updater(TOKEN, use_context=True,
-                      request_kwargs=REQUEST_KWARGS)  # , request_kwargs=REQUEST_KWARGS
+    if "TOKEN" in os.environ:
+        updater = Updater(TOKEN, use_context=True)  # , request_kwargs=REQUEST_KWARGS
+    else:
+        updater = Updater(TOKEN, use_context=True,
+                          request_kwargs=REQUEST_KWARGS)  # , request_kwargs=REQUEST_KWARGS
 
     dp = updater.dispatcher
 
