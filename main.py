@@ -70,8 +70,9 @@ def main():
         # session = db_session.create_session()
         # stories = session.query(Story).all()
         # session.close()
-        # for story in stories:
-        #     story = story.to_dict()
+        # for i in range(len(stories)):
+        #     print(i)
+        #     story = stories[i].to_dict()
         #     session = db_session.create_session()
         #     new = Story(
         #         id=None,
@@ -107,9 +108,16 @@ def start():
     else:
         stories = None
 
+    all_stories = session.query(Story).all()
+
+    all_stories = list(map(lambda x: x.to_dict(), all_stories))
+
+    all_stories = sorted(all_stories, key=lambda x: x['id'])
+
+    # all_stories = sorted(all_stories, all_stories)
     return render_template('index.html',
                            background=url_for('static', filename='img/bg.jpg'),
-                           stories=session.query(Story).all(),
+                           stories=all_stories,
                            user_stories=stories)
 
 
