@@ -48,13 +48,27 @@ class Qt_stories(QMainWindow, Ui_MainWindow):
 
             f.write(file)
             f.close()
-            print('Истории добавлена')
+            print('История добавлена')
 
             f = open(FILENAME, 'r', encoding='utf-8')
-            print(f.readlines())
+            print(f.readlines()[-10:])
             f.close()
+
+            self.textTitle.clear()
+            self.text.clear()
+            self.textAnswer.clear()
+            self.textSpectator.clear()
+            self.textOpinion.clear()
+            self.textApi.clear()
+            self.textProof.clear()
+            self.textApiMessage.clear()
+            self.Ans1.clear()
+            self.Ans2.clear()
+            self.Ans3.clear()
+            self.Ans4.clear()
         except Exception as e:
             print(e)
+
 
     def delete_dir(self):
         f = open(FILENAME, 'w', encoding='utf-8')
