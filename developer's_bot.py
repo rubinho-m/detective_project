@@ -9,7 +9,7 @@ from send_email import send_email
 api_url = 'http://localhost:5000'
 
 REQUEST_KWARGS = {
-    'proxy_url': 'socks4://167.114.167.143:45204'
+    'proxy_url': 'socks4://5.56.133.56:42659'
 }
 
 
@@ -71,7 +71,7 @@ def proof(update, context):
 
 def api_message(update, context):
     context.user_data['data']['api_message'] = update.message.text
-    message = ['Пожалуйста, введите 5 ответов на историю', 'Ответы должны быть разделены _',
+    message = ['Пожалуйста, введите 5 ответов на историю', 'Ответы должны быть разделены пробелом',
                'Один из ответов должен быть правильным(тем, что вы указали ранее)']
     update.message.reply_text('\n'.join(message))
     return 9
