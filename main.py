@@ -108,16 +108,9 @@ def start():
     else:
         stories = None
 
-    all_stories = session.query(Story).all()
-
-    all_stories = list(map(lambda x: x.to_dict(), all_stories))
-
-    all_stories = sorted(all_stories, key=lambda x: x['id'])
-    session.close()
-
     return render_template('index.html',
                            background=url_for('static', filename='img/bg.jpg'),
-                           stories=all_stories,
+                           stories=session.query(Story).all(),
                            user_stories=stories)
 
 
