@@ -71,7 +71,7 @@ def proof(update, context):
 
 def api_message(update, context):
     context.user_data['data']['api_message'] = update.message.text
-    message = ['Пожалуйста, введите 5 ответов на историю', 'Ответы должны быть разделены пробелом',
+    message = ['Пожалуйста, введите 5 ответов на историю', 'Ответы должны быть разделены запятыми',
                'Один из ответов должен быть правильным(тем, что вы указали ранее)']
     update.message.reply_text('\n'.join(message))
     return 9

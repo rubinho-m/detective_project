@@ -39,7 +39,7 @@ def create_session() -> Session:
     # global k
     # k += 1
     # if k != 1:
-    #     bd = 'postgres://hltznebfnqgzrn:5789bca7a95dc1df252d4bb9fbc643230e5d37d6fd202a972a93f812bb4240e3@ec2-52-44-55-63.compute-1.amazonaws.com:5432/d1qfd3iejflmpl'
+    #     bd = 'postgres://kcxclqidxjcndn:b58edf0876605b6ed9b14d32e01bea475fb7c26c769ecd6c5312aeae3367fec0@ec2-35-171-31-33.compute-1.amazonaws.com:5432/deardkh58mhgrk'
     #     engine = sa.create_engine(bd, echo=False)
     #     __factory = orm.sessionmaker(bind=engine)
     return __factory()
