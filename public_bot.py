@@ -1,9 +1,10 @@
 from get_img import get_img
 from get_wiki_answer import get_description
 from telegram import ReplyKeyboardMarkup
+from data import db_session
 from telegram.ext import Updater, MessageHandler, Filters
 from telegram.ext import CallbackContext, CommandHandler, ConversationHandler
-from requests import get, post, delete
+from story_resource import Story
 import os
 import random
 
@@ -12,15 +13,16 @@ if "TOKEN" in os.environ:
 else:
     from config import TOKEN
 
-api_url = 'http://localhost:5000'
+# api_url = 'http://localhost:5000'
 # api_url = 'https://detective-test.herokuapp.com/'
 
-REQUEST_KWARGS = {
-    'proxy_url': 'socks4://5.56.133.56:42659'
-}
+# REQUEST_KWARGS = {
+#     'proxy_url': 'socks4://5.56.133.56:42659'
+# }
 
 
 def start(update, context):
+    print('yes')
     context.user_data['in_progress'] = []
     context.user_data['active_story'] = 0
     context.user_data['story_dict'] = {}
@@ -28,7 +30,7 @@ def start(update, context):
     context.user_data['failed_stories'] = []
     context.user_data['answer'] = ''
 
-    stories = get(f'{api_url}/api/stories').json()['stories']
+    # stories = get(f'{api_url}/api/stories').json()['stories']
 
     reply_keyboard = [['/stories']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
@@ -47,7 +49,10 @@ def start(update, context):
 
 
 def stories(update, context):
-    stories = get(f'{api_url}/api/stories').json()['stories']
+    # stories = get(f'{api_url}/api/stories').json()['stories']
+
+    session = db_session.create_session()
+    stories = [item.to_dict() for item in session.query(Story).all()]
     reply_keyboard = []
     message_text = ['Вам доступны истории:']
     for x in stories:
@@ -73,7 +78,9 @@ def story(update, context):
                       ['/answer'],
                       ['/search']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=False)
-    story = get(f'{api_url}/api/stories/{number}').json()['stories']
+    # story = get(f'{api_url}/api/stories/{number}').json()['stories']
+    session = db_session.create_session()
+    story = session.query(Story).get(number).to_dict()
     context.user_data['active_story'] = number
     context.user_data['in_progress'].append(number)
     context.user_data['story_dict'][number] = {'proof': False,
@@ -97,7 +104,9 @@ def proof(update, context):
         update.message.reply_text('У вас кончились улики')
     else:
         context.user_data['story_dict'][number]['proof'] = True
-        story = get(f'{api_url}/api/stories/{number}').json()['stories']
+        session = db_session.create_session()
+        # story = get(f'{api_url}/api/stories/{number}').json()['stories']
+        story = session.query(Story).get(number).to_dict()
         evidence = story['proof']
         api = story['api']
         # !!!!!ВАРИАНТЫ РАЗЛИЧНЫХ API!!!!!
@@ -143,7 +152,9 @@ def spectator(update, context):
     if context.user_data['story_dict'][number]['spectator']:
         update.message.reply_text('Вы опросили всех очевидцев')
     else:
-        story = get(f'{api_url}/api/stories/{number}').json()['stories']
+        session = db_session.create_session()
+        story = session.query(Story).get(number).to_dict()
+        # story = get(f'{api_url}/api/stories/{number}').json()['stories']
         phrase = story['spectator']
         begins = ['Вам сообщили, что ', 'Вы узнали, что ', 'Опрос показал, что ',
                   'Очевидцы рассказали, что ']
@@ -167,7 +178,9 @@ def opinion(update, context):
     if context.user_data['story_dict'][number]['opinion']:
         update.message.reply_text('Вы опросили всех коллег')
     else:
-        story = get(f'{api_url}/api/stories/{number}').json()['stories']
+        session = db_session.create_session()
+        story = session.query(Story).get(number).to_dict()
+        # story = get(f'{api_url}/api/stories/{number}').json()['stories']
         phrase = story['opinion']
         begins = ['Коллеги думают, что ', 'Вы узнали, что ', 'Ваши друзья думают, что ',
                   'Профессионалы рассказали, что ']
@@ -190,7 +203,11 @@ def answer(update, context):
     context.user_data['end'] = False
     context.user_data['correct'] = False
     number = context.user_data['active_story']
-    story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    # story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+
+    session = db_session.create_session()
+    story = session.query(Story).get(number).to_dict()['answer_choice'].split('_')
+    print(story)
 
     reply_keyboard = [['/yes'],
                       ['no']]
@@ -227,7 +244,10 @@ def first_response(update, context):
             reply_markup=markup
         )
         return ConversationHandler.END
-    story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    # story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    session = db_session.create_session()
+    story = session.query(Story).get(number).to_dict()['answer_choice'].split('_')
+
     context.user_data['answer'] = story[1]
     reply_keyboard = [['/yes'],
                       ['no']]
@@ -262,7 +282,9 @@ def second_response(update, context):
             reply_markup=markup
         )
         return ConversationHandler.END
-    story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    # story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    session = db_session.create_session()
+    story = session.query(Story).get(number).to_dict()['answer_choice'].split('_')
     context.user_data['answer'] = story[2]
     reply_keyboard = [['/yes'],
                       ['no']]
@@ -297,7 +319,9 @@ def third_response(update, context):
             reply_markup=markup
         )
         return ConversationHandler.END
-    story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    # story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    session = db_session.create_session()
+    story = session.query(Story).get(number).to_dict()['answer_choice'].split('_')
     context.user_data['answer'] = story[3]
     reply_keyboard = [['/yes'],
                       ['no']]
@@ -332,7 +356,9 @@ def fourth_response(update, context):
             reply_markup=markup
         )
         return ConversationHandler.END
-    story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    # story = get(f'{api_url}/api/stories/{number}').json()['stories']['answer_choice'].split('_')
+    session = db_session.create_session()
+    story = session.query(Story).get(number).to_dict()['answer_choice'].split('_')
     context.user_data['answer'] = story[4]
     reply_keyboard = [['/yes']]
     markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
@@ -349,7 +375,9 @@ def fourth_response(update, context):
 
 def agree(update, context):
     number = context.user_data['active_story']
-    right_answer = get(f'{api_url}/api/stories/{number}').json()['stories']['answer']
+    session = db_session.create_session()
+    right_answer = session.query(Story).get(number).to_dict()['answer']
+    # right_answer = get(f'{api_url}/api/stories/{number}').json()['stories']['answer']
     if right_answer == context.user_data['answer']:
         reply_keyboard = [['/exit']]
         markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
@@ -383,8 +411,7 @@ def main():
     if "TOKEN" in os.environ:
         updater = Updater(TOKEN, use_context=True)  # , request_kwargs=REQUEST_KWARGS
     else:
-        updater = Updater(TOKEN, use_context=True,
-                          request_kwargs=REQUEST_KWARGS)  # , request_kwargs=REQUEST_KWARGS
+        updater = Updater(TOKEN, use_context=True)  # , request_kwargs=REQUEST_KWARGS
 
     dp = updater.dispatcher
 
@@ -437,4 +464,5 @@ def main():
 
 
 if __name__ == '__main__':
+    db_session.global_init()
     main()

@@ -88,6 +88,10 @@ def main():
         #     )
         #     session.add(new)
         #     session.commit()
+        # session = db_session.create_session()
+        # story = session.query(Story).get(10).to_dict()
+        # stories = [item.to_dict() for item in session.query(Story).all()]
+        # print(stories)
         app.run(host='127.0.0.1', port=5000)
 
 
