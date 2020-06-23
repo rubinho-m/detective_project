@@ -16,9 +16,6 @@ else:
 # api_url = 'http://localhost:5000'
 # api_url = 'https://detective-test.herokuapp.com/'
 
-# REQUEST_KWARGS = {
-#     'proxy_url': 'socks4://5.56.133.56:42659'
-# }
 
 
 def start(update, context):
